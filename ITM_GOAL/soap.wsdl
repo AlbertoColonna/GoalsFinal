@@ -1,0 +1,1004 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.5-hudson-$BUILD_NUMBER-. --><!-- SFAPI WSDL V1/R18 2011-01-11 --><wsdl:definitions xmlns:tns="urn:server.sfapi.successfactors.com" xmlns:ens="urn:sfobject.sfapi.successfactors.com" xmlns:fns="urn:fault.sfapi.successfactors.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="urn:server.sfapi.successfactors.com">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="urn:fault.sfapi.successfactors.com">
+			<complexType name="SFWebServiceFaultException">
+				<sequence>
+					<element name="errorCode" type="xsd:string" />
+					<element name="errorMessage" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<element name="SFWebServiceFault" type="fns:SFWebServiceFaultException" />
+		</schema>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:swaRef="http://ws-i.org/profiles/basic/1.1/xsd" targetNamespace="urn:sfobject.sfapi.successfactors.com" elementFormDefault="qualified">
+			<import namespace="urn:fault.sfapi.successfactors.com" />
+			<simpleType name="featureType">
+				<restriction base="xsd:string">
+					<enumeration value="insert" />
+					<enumeration value="update" />
+					<enumeration value="upsert" />
+					<enumeration value="delete" />
+					<enumeration value="query" />
+					<enumeration value="queryMore" />
+				</restriction>
+			</simpleType>
+			<simpleType name="dataType">
+				<restriction base="xsd:string">
+					<enumeration value="string" />
+					<enumeration value="date" />
+					<enumeration value="datetime" />
+					<enumeration value="int" />
+					<enumeration value="long" />
+					<enumeration value="float" />
+					<enumeration value="double" />
+					<enumeration value="boolean" />
+					<enumeration value="binary" />
+				</restriction>
+			</simpleType>
+			<complexType name="SFCredential">
+				<sequence>
+					<element name="companyId" type="xsd:string" />
+					<element name="username" type="xsd:string" />
+					<element name="password" type="xsd:string" />
+					<element name="developerKey" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				</sequence>
+			</complexType>
+			<complexType name="SFParameter">
+				<sequence>
+					<element name="name" type="xsd:string" />
+					<element name="value" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="Error">
+				<sequence>
+					<element name="errorCode" type="xsd:string" />
+					<element name="errorMessage" type="xsd:string" />
+				</sequence>
+			</complexType>
+			<complexType name="LoginResult">
+				<sequence>
+					<element name="sessionId" type="xsd:string" nillable="true" />
+					<element name="msUntilPwdExpiration" type="xsd:long" nillable="true" />
+					<element name="error" type="ens:Error" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="Label">
+				<sequence>
+					<element name="value" type="xsd:string" />
+					<element name="locale" type="xsd:string" />
+					<element name="mime-type" type="xsd:string" nillable="true" />
+				</sequence>
+			</complexType>
+			<complexType name="PicklistOption">
+				<sequence>
+					<element name="id" type="xsd:long" />
+					<element name="label" type="ens:Label" minOccurs="0" maxOccurs="unbounded" />
+					<element name="status" type="xsd:string" nillable="true" />
+					<element name="value" type="xsd:double" />
+					<element name="externalCode" type="xsd:string" nillable="true" />
+				</sequence>
+			</complexType>
+			<complexType name="Picklist">
+				<sequence>
+					<element name="id" type="xsd:string" />
+					<element name="source" type="xsd:string" nillable="true" />
+					<element name="picklistOption" type="ens:PicklistOption" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="Field">
+				<sequence>
+					<element name="name" type="xsd:string" />
+					<element name="dataType" type="ens:dataType" />
+					<element name="picklist" type="ens:Picklist" minOccurs="0" maxOccurs="1" />
+					<element name="label" type="ens:Label" minOccurs="0" maxOccurs="unbounded" />
+					<element name="maxlength" type="xsd:int" minOccurs="0" maxOccurs="1" />
+					<element name="required" type="xsd:boolean" />
+				</sequence>
+			</complexType>
+			<complexType name="FieldEx">
+				<sequence>
+					<element name="name" type="xsd:string" />
+					<element name="dataType" type="ens:dataType" />
+					<element name="picklist" type="ens:Picklist" minOccurs="0" maxOccurs="1" />
+					<element name="label" type="ens:Label" minOccurs="0" maxOccurs="unbounded" />
+					<element name="maxlength" type="xsd:int" minOccurs="0" maxOccurs="1" />
+					<element name="required" type="xsd:boolean" />
+					<any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="EntityInfo">
+				<sequence>
+					<any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="DescribeResult">
+				<sequence>
+					<element name="type" type="xsd:string" nillable="true" />
+					<element name="field" type="ens:Field" nillable="true" maxOccurs="unbounded" />
+					<element name="feature" type="ens:featureType" minOccurs="0" maxOccurs="unbounded" />
+					<element name="error" type="ens:Error" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="DescribeExResult">
+				<sequence>
+					<element name="type" type="xsd:string" nillable="true" />
+					<element name="entityInfo" type="ens:EntityInfo" minOccurs="0" maxOccurs="1" />
+					<element name="field" type="ens:FieldEx" nillable="true" maxOccurs="unbounded" />
+					<element name="feature" type="ens:featureType" minOccurs="0" maxOccurs="unbounded" />
+					<element name="error" type="ens:Error" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="BusinessKeys">
+				<sequence>
+					<any namespace="##any" processContents="lax" minOccurs="1" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="SFObject">
+				<sequence>
+          <choice minOccurs="0" maxOccurs="1">
+            <element name="id" type="xsd:string" minOccurs="0" maxOccurs="1" />
+            <element name="businessKeys" type="ens:BusinessKeys" minOccurs="0" maxOccurs="1" />
+          </choice>
+					<element name="type" type="xsd:string" />
+					<any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="ObjectEditResult">
+				<sequence>
+					<element name="id" type="xsd:string" minOccurs="0" maxOccurs="1" />
+					<element name="errorStatus" type="xsd:string" />
+					<element name="editStatus" type="xsd:string" />
+					<element name="index" type="xsd:int" nillable="true" />
+					<element name="message" type="xsd:string" nillable="true" />
+				</sequence>
+			</complexType>
+			<complexType name="InsertResult">
+				<sequence>
+					<element name="jobStatus" type="xsd:string" />
+					<element name="message" type="xsd:string" nillable="true" />
+					<element name="objectEditResult" type="ens:ObjectEditResult" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="UpdateResult">
+				<sequence>
+					<element name="jobStatus" type="xsd:string" />
+					<element name="message" type="xsd:string" nillable="true" />
+					<element name="objectEditResult" type="ens:ObjectEditResult" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="UpsertResult">
+				<sequence>
+					<element name="jobStatus" type="xsd:string" />
+					<element name="message" type="xsd:string" nillable="true" />
+					<element name="objectEditResult" type="ens:ObjectEditResult" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<complexType name="QueryResult">
+				<sequence>
+					<element name="sfobject" type="ens:SFObject" minOccurs="0" maxOccurs="unbounded" />
+					<element name="numResults" type="xsd:int" />
+					<element name="hasMore" type="xsd:boolean" />
+					<element name="querySessionId" type="xsd:string" nillable="true" />
+				</sequence>
+			</complexType>
+			<complexType name="DeleteResult">
+				<sequence>
+					<element name="jobStatus" type="xsd:string" />
+					<element name="message" type="xsd:string" nillable="true" />
+					<element name="objectEditResult" type="ens:ObjectEditResult" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+			</complexType>
+			<element name="login">
+				<complexType>
+					<sequence>
+						<element name="credential" type="ens:SFCredential" />
+						<element name="param" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="loginResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:LoginResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="logout">
+				<complexType />
+			</element>
+			<element name="logoutResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="xsd:boolean" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="isValidSession">
+				<complexType />
+			</element>
+			<element name="isValidSessionResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="xsd:boolean" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="listSFObjects">
+				<complexType />
+			</element>
+			<element name="listSFObjectsResponse">
+				<complexType>
+					<sequence>
+						<element name="name" type="xsd:string" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="describeSFObjects">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" maxOccurs="unbounded" />
+						<element name="param" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="describeSFObjectsEx">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" maxOccurs="unbounded" />
+						<element name="param" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>						
+			<element name="describeSFObjectsResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:DescribeResult" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="describeSFObjectsExResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:DescribeExResult" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>			
+			<element name="query">
+				<complexType>
+					<sequence>
+						<element name="queryString" type="xsd:string" />
+						<element name="param" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="queryResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:QueryResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="queryMore">
+				<complexType>
+					<sequence>
+						<element name="querySessionId" type="xsd:string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="queryMoreResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:QueryResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="insert">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" />
+						<element name="sfobject" type="ens:SFObject" maxOccurs="unbounded" />
+						<element name="processingParam" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="insertResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:InsertResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="update">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" />
+						<element name="sfobject" type="ens:SFObject" maxOccurs="unbounded" />
+						<element name="processingParam" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="updateResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:UpdateResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="upsert">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" />
+						<element name="sfobject" type="ens:SFObject" maxOccurs="unbounded" />
+						<element name="processingParam" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="upsertResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:UpsertResult" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="delete">
+				<complexType>
+					<sequence>
+						<element name="type" type="xsd:string" />
+						<element name="sfobject" type="ens:SFObject" maxOccurs="unbounded" />
+						<element name="processingParam" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="deleteResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:DeleteResult" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<!-- /////////////////////////////////////// -->
+			<!-- Type and Elements for Async Query Begin -->
+			<!-- /////////////////////////////////////// -->
+			
+			<!-- Data Type for Async Query -->
+			<xsd:simpleType name="TaskResultStatusEnum">
+			 	<restriction base="xsd:string">
+					<enumeration value="running" />
+					<enumeration value="finished" />
+					<enumeration value="failed" />
+				</restriction>
+			</xsd:simpleType>
+			<complexType name="TaskResultStatus">
+				<sequence>
+					<element name="taskResultId" type="xsd:string" />
+					<element name="lastFinishTime" type="xsd:string" minOccurs="0" />
+					<element name="lastStartTime" type="xsd:string" minOccurs="0" />
+					<element name="validUntil" type="xsd:string" minOccurs="0" />
+					<element name="errorCode" type="xsd:string" minOccurs="0" />
+					<element name="message" type="xsd:string" minOccurs="0" />
+					<element name="status" type="ens:TaskResultStatusEnum" />
+				</sequence>
+			</complexType>
+			<xsd:simpleType name="TaskStatusEnum">
+			 	<restriction base="xsd:string">
+					<enumeration value="unsubmitted" />
+					<enumeration value="submitted" />
+					<enumeration value="processing" />
+					<enumeration value="finished" />
+					<enumeration value="failed" />
+					<enumeration value="undefined" />
+					<enumeration value="cancelled" />
+					<enumeration value="deleted" />
+				</restriction>
+			</xsd:simpleType>
+			<complexType name="TaskStatus">
+				<sequence>
+					<element name="taskId" type="xsd:string" />
+					<element name="taskName" type="xsd:string" minOccurs="0" />
+					<element name="createDate" type="xsd:string" />
+					<element name="status" type="ens:TaskStatusEnum" />
+					<element name="taskResult" type="ens:TaskResultStatus" minOccurs="0" />
+				</sequence>
+			</complexType>
+			<!-- End data type for Async Query -->
+			
+			<!-- Element for Async Query -->
+			<element name="submitQueryJob">
+				<complexType>
+					<sequence>
+						<element name="queryString" type="xsd:string" />
+						<element name="param" type="ens:SFParameter" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="submitQueryJobResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:TaskStatus" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<!-- Elements for Get Async Query result -->
+			<element name="getJobResult">
+				<complexType>
+					<sequence>
+						<element name="taskId" type="xsd:string" />
+						<element name="format" type="xsd:string" minOccurs="0" maxOccurs="1" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getJobResultResponse" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+			
+			<!-- Elements for Get Aysnc Query result embedded in Soap Response xml -->
+			<element name="getJobResultEmbedded">
+				<complexType>
+					<sequence>
+						<element name="taskId" type="xsd:string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getJobResultEmbeddedResponse" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" />
+					
+			<!-- Elements for Get Async Query result MTOM-->
+			<element name="getJobResultMTOMRQ">
+				<complexType>
+					<sequence>
+						<element name="taskId" type="xsd:string" />
+						<element name="format" type="xsd:string" minOccurs="0" maxOccurs="1" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getJobResultMTOMRS">
+				<complexType>
+					<sequence>
+  						<element name="result" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" /> 
+  					</sequence>
+  				</complexType>
+  			</element>
+
+			<!-- Elements for Get Async Query status -->
+			<element name="getJobStatus">
+				<complexType>
+					<sequence>
+						<element name="taskId" type="xsd:string" />
+					</sequence>
+				</complexType>
+			</element>
+			<element name="getJobStatusResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:TaskStatus" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<!-- Elements for List running and waiting jobs -->
+			<element name="listJobs">
+				<complexType />
+			</element>
+			
+			<element name="listJobsResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:TaskStatus" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+
+			<!-- Elements for cancel waiting jobs -->
+			<element name="cancelJob">
+				<complexType>
+					<sequence>
+						<element name="taskId" type="xsd:string" />
+					</sequence>
+				</complexType>
+			</element>
+			
+			<element name="cancelJobResponse">
+				<complexType>
+					<sequence>
+						<element name="result" type="ens:TaskStatus" />
+					</sequence>
+				</complexType>
+			</element>
+						
+			<!-- /////////////////////////////////////// -->
+			<!-- Type and Elements for Async Query End   -->
+			<!-- /////////////////////////////////////// -->
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="describeSFObjectsResponse">
+		<wsdl:part name="parameters" element="ens:describeSFObjectsResponse" />
+	</wsdl:message>
+	<wsdl:message name="describeSFObjectsExResponse">
+		<wsdl:part name="parameters" element="ens:describeSFObjectsExResponse" />
+	</wsdl:message>
+	<wsdl:message name="queryRequest">
+		<wsdl:part name="parameters" element="ens:query" />
+	</wsdl:message>
+	<wsdl:message name="listSFObjectsResponse">
+		<wsdl:part name="parameters" element="ens:listSFObjectsResponse" />
+	</wsdl:message>
+	<wsdl:message name="queryResponse">
+		<wsdl:part name="parameters" element="ens:queryResponse" />
+	</wsdl:message>
+	<wsdl:message name="logoutResponse">
+		<wsdl:part name="parameters" element="ens:logoutResponse" />
+	</wsdl:message>
+	<wsdl:message name="deleteRequest">
+		<wsdl:part name="parameters" element="ens:delete" />
+	</wsdl:message>
+	<wsdl:message name="isValidSessionResponse">
+		<wsdl:part name="parameters" element="ens:isValidSessionResponse" />
+	</wsdl:message>
+	<wsdl:message name="queryMoreResponse">
+		<wsdl:part name="parameters" element="ens:queryMoreResponse" />
+	</wsdl:message>
+	<wsdl:message name="loginRequest">
+		<wsdl:part name="parameters" element="ens:login" />
+	</wsdl:message>
+	<wsdl:message name="logoutRequest">
+		<wsdl:part name="parameters" element="ens:logout" />
+	</wsdl:message>
+	<wsdl:message name="insertRequest">
+		<wsdl:part name="parameters" element="ens:insert" />
+	</wsdl:message>
+	<wsdl:message name="updateRequest">
+		<wsdl:part name="parameters" element="ens:update" />
+	</wsdl:message>
+	<wsdl:message name="upsertRequest">
+		<wsdl:part name="parameters" element="ens:upsert" />
+	</wsdl:message>
+	<wsdl:message name="isValidSessionRequest">
+		<wsdl:part name="parameters" element="ens:isValidSession" />
+	</wsdl:message>
+	<wsdl:message name="deleteResponse">
+		<wsdl:part name="parameters" element="ens:deleteResponse" />
+	</wsdl:message>
+	<wsdl:message name="queryMoreRequest">
+		<wsdl:part name="parameters" element="ens:queryMore" />
+	</wsdl:message>
+	<wsdl:message name="loginResponse">
+		<wsdl:part name="parameters" element="ens:loginResponse" />
+	</wsdl:message>
+	<wsdl:message name="describeSFObjectsRequest">
+		<wsdl:part name="parameters" element="ens:describeSFObjects" />
+	</wsdl:message>
+	<wsdl:message name="describeSFObjectsExRequest">
+		<wsdl:part name="parameters" element="ens:describeSFObjectsEx" />
+	</wsdl:message>
+	<wsdl:message name="listSFObjectsRequest">
+		<wsdl:part name="parameters" element="ens:listSFObjects" />
+	</wsdl:message>
+	<wsdl:message name="insertResponse">
+		<wsdl:part name="parameters" element="ens:insertResponse" />
+	</wsdl:message>
+	<wsdl:message name="updateResponse">
+		<wsdl:part name="parameters" element="ens:updateResponse" />
+	</wsdl:message>
+	<wsdl:message name="upsertResponse">
+		<wsdl:part name="parameters" element="ens:upsertResponse" />
+	</wsdl:message>
+	<wsdl:message name="SFWebServiceFaultException">
+		<wsdl:part name="SFWebServiceFault" element="fns:SFWebServiceFault" />
+	</wsdl:message>
+	
+	<!-- /////////////////////////////////////// -->
+	<!-- Messages for Async Query Begin          -->
+	<!-- /////////////////////////////////////// -->
+	
+	<!-- Messages for Async Query -->	
+	<wsdl:message name="submitQueryJobRequest">
+		<wsdl:part name="parameters" element="ens:submitQueryJob" />
+	</wsdl:message>
+	<wsdl:message name="submitQueryJobResponse">
+		<wsdl:part name="response" element="ens:submitQueryJobResponse" />
+	</wsdl:message>
+	
+	<!-- Messages for Async Query Result -->
+	<wsdl:message name="getJobResult">
+		<wsdl:part name="parameters" element="ens:getJobResult" />
+	</wsdl:message>
+	<wsdl:message name="getJobResultResponse">
+		<wsdl:part name="parameters" element="ens:getJobResultResponse" />
+	</wsdl:message>
+	
+	<!-- Messages for Async Query Result returned as embedded string in Soap Response -->
+	<wsdl:message name="getJobResultEmbedded">
+		<wsdl:part name="parameters" element="ens:getJobResultEmbedded" />
+	</wsdl:message>
+	<wsdl:message name="getJobResultEmbeddedResponse">
+		<wsdl:part name="getJobResultEmbeddedResponse" element="ens:getJobResultEmbeddedResponse" />
+	</wsdl:message>
+	
+	<!-- Messages for Async Query Result MTOM-->
+	<wsdl:message name="getJobResultMTOMRQ">
+		<wsdl:part name="parameters" element="ens:getJobResultMTOMRQ" />
+	</wsdl:message>
+	<wsdl:message name="getJobResultMTOMRS">
+		<wsdl:part name="parameters" element="ens:getJobResultMTOMRS" />
+	</wsdl:message>
+	
+	<!-- Messages for Async Query Status -->
+	<wsdl:message name="getJobStatus">
+		<wsdl:part name="parameters" element="ens:getJobStatus" />
+	</wsdl:message>
+	<wsdl:message name="getJobStatusResponse">
+		<wsdl:part name="parameters" element="ens:getJobStatusResponse" />
+	</wsdl:message>
+	
+	<!-- Messages for list running and waiting jobs -->
+	<wsdl:message name="listJobs">
+		<wsdl:part name="parameters" element="ens:listJobs" />
+	</wsdl:message>
+	<wsdl:message name="listJobsResponse">
+		<wsdl:part name="parameters" element="ens:listJobsResponse" />
+	</wsdl:message>
+	
+	<!-- Messages for list running and waiting jobs -->
+	<wsdl:message name="cancelJob">
+		<wsdl:part name="parameters" element="ens:cancelJob" />
+	</wsdl:message>
+	<wsdl:message name="cancelJobResponse">
+		<wsdl:part name="parameters" element="ens:cancelJobResponse" />
+	</wsdl:message>
+	
+	<!-- /////////////////////////////////////// -->
+	<!-- Messages for Async Query End            -->
+	<!-- /////////////////////////////////////// -->
+	
+	<wsdl:portType name="SFAPI">
+		<wsdl:operation name="login">
+			<wsdl:input name="loginRequest" message="tns:loginRequest" />
+			<wsdl:output name="loginResponse" message="tns:loginResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="isValidSession">
+			<wsdl:input name="isValidSessionRequest" message="tns:isValidSessionRequest" />
+			<wsdl:output name="isValidSessionResponse" message="tns:isValidSessionResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="describe">
+			<wsdl:input name="describeSFObjectsRequest" message="tns:describeSFObjectsRequest" />
+			<wsdl:output name="describeSFObjectsResponse" message="tns:describeSFObjectsResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="describeEx">
+			<wsdl:input name="describeSFObjectsExRequest" message="tns:describeSFObjectsExRequest" />
+			<wsdl:output name="describeSFObjectsExResponse" message="tns:describeSFObjectsExResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="logout">
+			<wsdl:input name="logoutRequest" message="tns:logoutRequest" />
+			<wsdl:output name="logoutResponse" message="tns:logoutResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="list">
+			<wsdl:input name="listSFObjectsRequest" message="tns:listSFObjectsRequest" />
+			<wsdl:output name="listSFObjectsResponse" message="tns:listSFObjectsResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="query">
+			<wsdl:input name="queryRequest" message="tns:queryRequest" />
+			<wsdl:output name="queryResponse" message="tns:queryResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="queryMore">
+			<wsdl:input name="queryMoreRequest" message="tns:queryMoreRequest" />
+			<wsdl:output name="queryMoreResponse" message="tns:queryMoreResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="insert">
+			<wsdl:input name="insertRequest" message="tns:insertRequest" />
+			<wsdl:output name="insertResponse" message="tns:insertResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<wsdl:input name="updateRequest" message="tns:updateRequest" />
+			<wsdl:output name="updateResponse" message="tns:updateResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="upsert">
+			<wsdl:input name="upsertRequest" message="tns:upsertRequest" />
+			<wsdl:output name="upsertResponse" message="tns:upsertResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		<wsdl:operation name="delete">
+			<wsdl:input name="deleteRequest" message="tns:deleteRequest" />
+			<wsdl:output name="deleteResponse" message="tns:deleteResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<!-- /////////////////////////////////////// -->
+		<!-- Operations for Async Query Begin        -->
+		<!-- /////////////////////////////////////// -->
+		
+		<wsdl:operation name="submitQueryJob">
+			<wsdl:input name="submitQueryJobRequest" message="tns:submitQueryJobRequest" />
+			<wsdl:output name="submitQueryJobResponse" message="tns:submitQueryJobResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="getJobResult">
+			<wsdl:input name="getJobResultRequest" message="tns:getJobResult" />
+			<wsdl:output name="getJobResultResponse" message="tns:getJobResultResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="getJobResultEmbedded">
+			<wsdl:input name="getJobResultEmbeddedRequest" message="tns:getJobResultEmbedded" />
+			<wsdl:output name="getJobResultEmbeddedResponse" message="tns:getJobResultEmbeddedResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="getJobStatus">
+			<wsdl:input name="getJobStatusRequest" message="tns:getJobStatus" />
+			<wsdl:output name="getJobStatusResponse" message="tns:getJobStatusResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="listJobs">
+			<wsdl:input name="listJobsRequest" message="tns:listJobs" />
+			<wsdl:output name="listJobsResponse" message="tns:listJobsResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="cancelJob">
+			<wsdl:input name="cancelJobRequest" message="tns:cancelJob" />
+			<wsdl:output name="cancelJobResponse" message="tns:cancelJobResponse" />
+			<wsdl:fault name="SFWebServiceFaultException" message="tns:SFWebServiceFaultException" />
+		</wsdl:operation>
+		
+		<!-- /////////////////////////////////////// -->
+		<!-- Operations for Async Query End        -->
+		<!-- /////////////////////////////////////// -->
+		
+	</wsdl:portType>
+	<wsdl:binding name="SFAPISoapBinding" type="tns:SFAPI">
+		<wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="login">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="loginRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="loginResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="isValidSession">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="isValidSessionRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="isValidSessionResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="describe">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="describeSFObjectsRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="describeSFObjectsResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="describeEx">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="describeSFObjectsExRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="describeSFObjectsExResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="logout">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="logoutRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="logoutResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="list">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="listSFObjectsRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="listSFObjectsResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="query">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="queryRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="queryResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="queryMore">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="queryMoreRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="queryMoreResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="insert">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="insertRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="insertResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="update">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="updateRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="updateResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="upsert">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="upsertRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="upsertResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="delete">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="deleteRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="deleteResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<!-- /////////////////////////////////////// -->
+		<!-- Operations for Async Query Begin        -->
+		<!-- /////////////////////////////////////// -->
+		
+		<wsdl:operation name="submitQueryJob">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="submitQueryJobRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="submitQueryJobResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="getJobResult">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getJobResultRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getJobResultResponse">
+				<mime:multipartRelated>
+					<mime:part>
+						<wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="parameters" use="encoded" />
+					</mime:part>
+					<mime:part>
+						<mime:content part="parameters" type="application/octet-stream" />
+					</mime:part>
+				</mime:multipartRelated>
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="getJobResultEmbedded">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getJobResultEmbeddedRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getJobResultEmbeddedResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		 
+		<wsdl:operation name="getJobStatus">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="getJobStatusRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getJobStatusResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="listJobs">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="listJobsRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="listJobsResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="cancelJob">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input name="cancelJobRequest">
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="cancelJobResponse">
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SFWebServiceFaultException">
+				<wsdlsoap:fault name="SFWebServiceFaultException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<!-- /////////////////////////////////////// -->
+		<!-- Operations for Async Query End          -->
+		<!-- /////////////////////////////////////// -->
+		
+	</wsdl:binding>
+	<wsdl:service name="SFAPIService">
+		<wsdl:port name="SFAPI" binding="tns:SFAPISoapBinding">
+			<wsdlsoap:address location="https://api.successfactors.eu:443/sfapi/v1/soap" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
